@@ -167,6 +167,22 @@ const PropertyList = () => {
                         setEditingProperty({ ...editingProperty, price: e.target.value })
                       }
                     />
+                    <input
+                      type="text"
+                      value={editingProperty.image}
+                      placeholder="Image URL"
+                      onChange={(e) =>
+                        setEditingProperty({ ...editingProperty, image: e.target.value })
+                      }
+                    />
+                    <input
+                      type="text"
+                      value={editingProperty.description}
+                      placeholder="Description"
+                      onChange={(e) =>
+                        setEditingProperty({ ...editingProperty, description: e.target.value })
+                      }
+                    />
                     <button onClick={handleUpdate} className="save-button">Save</button>
                     <button onClick={() => setEditingProperty(null)} className="cancel-button">Cancel</button>
                   </div>
@@ -175,6 +191,7 @@ const PropertyList = () => {
                     <h3>{property.name}</h3>
                     <p>{property.location}</p>
                     <p>Price: ${property.price}</p>
+                    <p>Description: {property.description}</p>
                     {user?.role === "admin" && (
                       <div className="action-buttons">
                         <button onClick={() => handleEdit(property)} className="edit-button">Edit</button>
