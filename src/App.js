@@ -1,20 +1,29 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useContext } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import PropertyList from "./components/PropertyList";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
+import { AuthContext } from "./context/AuthContext";
+
+// 🔒 Protected Route Component
+const ProtectedRoute = ({ element }) => {
+  const { user } = useContext(AuthContext);
+  return user ? element : <Navigate to="/login" />;
+};
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login/>} />
         <Route path="/properties" element={<PropertyList />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* ✅ Protect the Dashboard Route */}
+        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
       </Routes>
     </Router>
   );

@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";  // ✅ Import useNavigate
 import propertyService from "../services/propertyService";
 import { AuthContext } from "../context/AuthContext";
-
+import '../components/property.css'
 const PropertyList = () => {
   const [properties, setProperties] = useState([]);
-  const [newProperty, setNewProperty] = useState({ name: "", location: "" });
+  const [newProperty, setNewProperty] = useState({ name: "", location: "", price: "" });
   const [editingProperty, setEditingProperty] = useState(null);
-  const { user } = useContext(AuthContext); // Get logged-in user
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate(); // ✅ Initialize useNavigate
 
   useEffect(() => {
     fetchProperties();
@@ -14,10 +16,47 @@ const PropertyList = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await propertyService.getAll();
-      setProperties(response.data);
+      const data = await propertyService.getAll();
+      setProperties(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching properties:", error);
+      setProperties([]);
+    }
+  };
+
+  const handleLogout = () => {
+    logout(); // ✅ Call logout function
+    navigate("/login"); // ✅ Redirect to login page after logout
+  };
+
+  const handleCreate = async () => {
+    if (!user?.token || user?.role !== "admin") {
+      alert("Unauthorized: Only admins can add properties.");
+      return;
+    }
+
+    if (!newProperty.name || !newProperty.location || !newProperty.price) {
+      alert("Please enter name, location, and price.");
+      return;
+    }
+
+    const priceValue = parseFloat(newProperty.price);
+    if (isNaN(priceValue) || priceValue <= 0) {
+      alert("Price must be a valid number greater than 0.");
+      return;
+    }
+
+    try {
+      const createdProperty = await propertyService.create({
+        ...newProperty,
+        price: priceValue,
+      });
+
+      setProperties((prev) => [...prev, createdProperty]);
+      setNewProperty({ name: "", location: "", price: "" });
+    } catch (error) {
+      console.error("Error adding property:", error);
+      alert(error.response?.data?.error || "Failed to add property.");
     }
   };
 
@@ -29,25 +68,15 @@ const PropertyList = () => {
 
     try {
       await propertyService.delete(id);
-      setProperties(properties.filter((property) => property._id !== id));
+      setProperties((prev) => prev.filter((property) => property._id !== id));
     } catch (error) {
       console.error("Error deleting property:", error);
+      alert("Failed to delete property.");
     }
   };
 
-  const handleCreate = async () => {
-    if (!user?.token || user?.role !== "admin") {
-      alert("Unauthorized: Only admins can add properties.");
-      return;
-    }
-
-    try {
-      const response = await propertyService.create(newProperty);
-      setProperties([...properties, response.data]);
-      setNewProperty({ name: "", location: "" }); // Clear input fields
-    } catch (error) {
-      console.error("Error adding property:", error);
-    }
+  const handleEdit = (property) => {
+    setEditingProperty(property);
   };
 
   const handleUpdate = async () => {
@@ -57,21 +86,28 @@ const PropertyList = () => {
     }
 
     try {
-      await propertyService.update(editingProperty._id, editingProperty);
-      setProperties(
-        properties.map((property) =>
-          property._id === editingProperty._id ? editingProperty : property
-        )
+      const updatedProperty = await propertyService.update(editingProperty._id, editingProperty);
+      setProperties((prev) =>
+        prev.map((property) => (property._id === updatedProperty._id ? updatedProperty : property))
       );
       setEditingProperty(null);
     } catch (error) {
       console.error("Error updating property:", error);
+      alert("Failed to update property.");
     }
   };
 
   return (
     <div>
       <h2>Property Listings</h2>
+
+      {/* ✅ Logout Button with Redirect */}
+      {user && (
+        <div>
+          <p>Logged in as: {user.username} ({user.role})</p>
+          <button onClick={handleLogout}>Logout</button> {/* ✅ Calls handleLogout */}
+        </div>
+      )}
 
       {/* ✅ Add New Property (Admin Only) */}
       {user?.role === "admin" && (
@@ -89,44 +125,64 @@ const PropertyList = () => {
             value={newProperty.location}
             onChange={(e) => setNewProperty({ ...newProperty, location: e.target.value })}
           />
+          <input
+            type="number"
+            placeholder="Price"
+            value={newProperty.price}
+            onChange={(e) => setNewProperty({ ...newProperty, price: e.target.value })}
+          />
           <button onClick={handleCreate}>Add</button>
         </div>
       )}
 
       {/* ✅ Property List */}
-      {properties.map((property) => (
-        <div key={property._id}>
-          {editingProperty && editingProperty._id === property._id ? (
-            // Edit Mode
-            <div>
-              <input
-                type="text"
-                value={editingProperty.name}
-                onChange={(e) => setEditingProperty({ ...editingProperty, name: e.target.value })}
-              />
-              <input
-                type="text"
-                value={editingProperty.location}
-                onChange={(e) => setEditingProperty({ ...editingProperty, location: e.target.value })}
-              />
-              <button onClick={handleUpdate}>Save</button>
-              <button onClick={() => setEditingProperty(null)}>Cancel</button>
-            </div>
-          ) : (
-            // Display Mode
-            <div>
-              <h3>{property.name}</h3>
-              <p>{property.location}</p>
-              {user?.role === "admin" && (
-                <>
-                  <button onClick={() => handleDelete(property._id)}>Delete</button>
-                  <button onClick={() => setEditingProperty(property)}>Edit</button>
-                </>
-              )}
-            </div>
-          )}
-        </div>
-      ))}
+      {properties.length === 0 ? (
+        <p>No properties available.</p>
+      ) : (
+        properties.map((property) => (
+          <div key={property._id}>
+            {editingProperty && editingProperty._id === property._id ? (
+              <div>
+                <input
+                  type="text"
+                  value={editingProperty.name}
+                  onChange={(e) =>
+                    setEditingProperty({ ...editingProperty, name: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  value={editingProperty.location}
+                  onChange={(e) =>
+                    setEditingProperty({ ...editingProperty, location: e.target.value })
+                  }
+                />
+                <input
+                  type="number"
+                  value={editingProperty.price}
+                  onChange={(e) =>
+                    setEditingProperty({ ...editingProperty, price: e.target.value })
+                  }
+                />
+                <button onClick={handleUpdate}>Save</button>
+                <button onClick={() => setEditingProperty(null)}>Cancel</button>
+              </div>
+            ) : (
+              <div>
+                <h3>{property.name}</h3>
+                <p>{property.location}</p>
+                <p>Price: ${property.price}</p>
+                {user?.role === "admin" && (
+                  <>
+                    <button onClick={() => handleDelete(property._id)}>Delete</button>
+                    <button onClick={() => handleEdit(property)}>Edit</button>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        ))
+      )}
     </div>
   );
 };

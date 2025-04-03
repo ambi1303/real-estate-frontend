@@ -1,10 +1,10 @@
 import { useState, useContext } from 'react';
 import axios from 'axios';
-import {AuthContext} from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
-  const { login } = useContext(AuthContext); // Ensure this is correctly destructured
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   
   const [email, setEmail] = useState('');
@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      login(response.data);  // Ensure `login` function exists
+      login(response.data);  
       navigate('/properties');
     } catch (error) {
       console.error('Login error:', error);
@@ -22,11 +22,29 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      <button type="submit">Login</button>
-    </form>
+    <div>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <input 
+          type="email" 
+          placeholder="Email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          required 
+        />
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          required 
+        />
+        <button type="submit">Login</button>
+      </form>
+
+      {/* ✅ Add a link to Signup page */}
+      <p>Don't have an account? <Link to="/signup">Sign up here</Link></p>
+    </div>
   );
 };
 
