@@ -6,15 +6,16 @@ import "../components/property.css";
 
 const PropertyList = () => {
   const [properties, setProperties] = useState([]);
-  const [newProperty, setNewProperty] = useState({ name: "", location: "", price: "" });
+  const [newProperty, setNewProperty] = useState({ name: "", location: "", price: "", image: "", description: "" });
   const [editingProperty, setEditingProperty] = useState(null);
-  const { user, logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchProperties();
   }, []);
 
+  // Fetch properties from backend
   const fetchProperties = async () => {
     try {
       const data = await propertyService.getAll();
@@ -25,6 +26,7 @@ const PropertyList = () => {
     }
   };
 
+  // Create a new property
   const handleCreate = async () => {
     if (!user?.token || user?.role !== "admin") {
       alert("Unauthorized: Only admins can add properties.");
@@ -37,15 +39,24 @@ const PropertyList = () => {
     }
 
     try {
-      const createdProperty = await propertyService.create(newProperty);
+      const payload = {
+        name: newProperty.name,
+        location: newProperty.location,
+        price: Number(newProperty.price), // Ensure price is a number
+        image: newProperty.image || "default-image.jpg", // Default image if missing
+        description: newProperty.description || "No description available" // Default description
+      };
+
+      const createdProperty = await propertyService.create(payload);
       setProperties((prev) => [...prev, createdProperty]);
-      setNewProperty({ name: "", location: "", price: "" });
+      setNewProperty({ name: "", location: "", price: "", image: "", description: "" });
     } catch (error) {
-      console.error("Error adding property:", error);
-      alert("Failed to add property.");
+      console.error("Error adding property:", error.response?.data || error.message);
+      alert(`Failed to add property: ${error.response?.data?.message || error.message}`);
     }
   };
 
+  // Delete a property
   const handleDelete = async (id) => {
     if (!user?.token || user?.role !== "admin") {
       alert("Unauthorized: Only admins can delete properties.");
@@ -61,10 +72,12 @@ const PropertyList = () => {
     }
   };
 
+  // Edit a property
   const handleEdit = (property) => {
     setEditingProperty(property);
   };
 
+  // Update property
   const handleUpdate = async () => {
     if (!editingProperty || !user?.token || user?.role !== "admin") {
       alert("Unauthorized: Only admins can update properties.");
@@ -106,6 +119,18 @@ const PropertyList = () => {
             placeholder="Price"
             value={newProperty.price}
             onChange={(e) => setNewProperty({ ...newProperty, price: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Image URL (optional)"
+            value={newProperty.image}
+            onChange={(e) => setNewProperty({ ...newProperty, image: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Description (optional)"
+            value={newProperty.description}
+            onChange={(e) => setNewProperty({ ...newProperty, description: e.target.value })}
           />
           <button onClick={handleCreate} className="add-button">Add a new property</button>
         </div>
