@@ -1,127 +1,69 @@
-/* 🔹 General Styles */
-.property-list-container {
+/* ✅ Style for the Property Listings Page */
+.property-listings {
     max-width: 900px;
-    margin: 20px auto;
+    margin: auto;
     padding: 20px;
-    background: #ffffff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-  }
-  
-  h2 {
     text-align: center;
-    color: #2c3e50;
-  }
-  
-  .property-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .logout-btn {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: background 0.3s;
-  }
-  
-  .logout-btn:hover {
-    background-color: #c0392b;
-  }
-  
-  /* 🔹 Add Property Section */
-  .add-property {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+}
+
+/* ✅ Style for Individual Property Cards */
+.property-card {
+    background: white;
     padding: 15px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    margin-top: 20px;
-  }
-  
-  .add-property input {
+    border-radius: 10px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+    margin-bottom: 15px;
+}
+
+.property-card:hover {
+    transform: scale(1.05);
+}
+
+/* ✅ Styling for the Add/Edit Form */
+.property-form {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.property-form input {
+    width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
     border-radius: 5px;
-  }
-  
-  .add-btn {
-    background-color: #2ecc71;
+}
+
+/* ✅ Styling for Buttons */
+.property-btn {
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 10px;
-    cursor: pointer;
     border-radius: 5px;
-  }
-  
-  .add-btn:hover {
-    background-color: #27ae60;
-  }
-  
-  /* 🔹 Property Card */
-  .property-card {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 8px;
-    background: #f8f8f8;
-    margin-top: 15px;
-  }
-  
-  .property-card h3 {
-    margin: 5px 0;
-    color: #444;
-  }
-  
-  .property-card p {
-    margin: 3px 0;
-    color: #666;
-  }
-  
-  /* 🔹 Buttons */
-  .button-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .edit-btn, .delete-btn {
-    border: none;
-    padding: 8px 12px;
     cursor: pointer;
+    margin-right: 5px;
+}
+
+.property-btn:hover {
+    background-color: #0056b3;
+}
+
+.property-btn.delete {
+    background-color: #dc3545;
+}
+
+.property-btn.delete:hover {
+    background-color: #b02a37;
+}
+
+/* ✅ Logout Section */
+.logout-section {
+    margin-bottom: 20px;
+    background: #e9ecef;
+    padding: 10px;
     border-radius: 5px;
-    font-size: 14px;
-  }
-  
-  .edit-btn {
-    background-color: #f1c40f;
-    color: white;
-  }
-  
-  .edit-btn:hover {
-    background-color: #d4ac0d;
-  }
-  
-  .delete-btn {
-    background-color: #e74c3c;
-    color: white;
-  }
-  
-  .delete-btn:hover {
-    background-color: #c0392b;
-  }
-  
-  /* 🔹 Responsive Design */
-  @media (max-width: 600px) {
-    .property-actions {
-      flex-direction: column;
-      gap: 10px;
-    }
-  }
-  
+}

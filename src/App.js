@@ -5,6 +5,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
 import { AuthContext } from "./context/AuthContext";
+import './styles.css'; 
 
 // 🔒 Protected Route Component
 const ProtectedRoute = ({ element }) => {

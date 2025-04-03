@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";  // ✅ Import useNavigate
 import propertyService from "../services/propertyService";
 import { AuthContext } from "../context/AuthContext";
-import '../components/property.css'
+import '../components/property.css';
 const PropertyList = () => {
   const [properties, setProperties] = useState([]);
   const [newProperty, setNewProperty] = useState({ name: "", location: "", price: "" });
