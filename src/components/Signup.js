@@ -14,9 +14,9 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('process.env.REACT_APP_API_BASE_URL/api/auth/signup', { name, email, password, role });
-      setMessage('Signup successful! Redirecting to login...'); // ✅ Show success message
-      setTimeout(() => navigate('/login'), 2000); // ✅ Redirect after 2 seconds
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`, { name, email, password, role });
+      setMessage('Signup successful! Redirecting to login...');
+      setTimeout(() => navigate('/login'), 2000);
     } catch (error) {
       setMessage('Signup failed. Please try again.');
       console.error('Signup error:', error);
@@ -59,7 +59,6 @@ const Signup = () => {
         <button type="submit">Signup</button>
       </form>
 
-      {/* ✅ Add a link to Login page */}
       <p>Already have an account? <Link to="/login">Login here</Link></p>
     </div>
   );

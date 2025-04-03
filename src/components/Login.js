@@ -13,7 +13,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('process.env.REACT_APP_API_BASE_URL/api/auth/login', { email, password });
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/login`, { email, password });
       login(response.data);  
       navigate('/properties');
     } catch (error) {
@@ -42,7 +42,6 @@ const Login = () => {
         <button type="submit">Login</button>
       </form>
 
-      {/* ✅ Add a link to Signup page */}
       <p>Don't have an account? <Link to="/signup">Sign up here</Link></p>
     </div>
   );
