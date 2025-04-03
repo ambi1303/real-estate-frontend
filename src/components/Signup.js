@@ -7,26 +7,36 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('user'); // Default role is 'user'
-  const [message, setMessage] = useState(''); // ✅ Success/Error Message
+  const [message, setMessage] = useState(''); 
 
   const navigate = useNavigate();
+
+  // ✅ Check if API Base URL is correct
+  console.log("API Base URL:", process.env.REACT_APP_API_BASE_URL);
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`, { name, email, password, role });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`, 
+        { name, email, password, role }, 
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      console.log("Signup Response:", response.data); // ✅ Debugging log
+
       setMessage('Signup successful! Redirecting to login...');
       setTimeout(() => navigate('/login'), 2000);
     } catch (error) {
-      setMessage('Signup failed. Please try again.');
-      console.error('Signup error:', error);
+      console.error('Signup error:', error.response ? error.response.data : error.message);
+      setMessage(error.response?.data?.message || 'Signup failed. Please try again.');
     }
   };
 
   return (
     <div>
       <h2>Signup</h2>
-      {message && <p>{message}</p>} {/* ✅ Display success/error message */}
+      {message && <p>{message}</p>}
       <form onSubmit={handleSignup}>
         <input 
           type="text" 
@@ -50,7 +60,7 @@ const Signup = () => {
           required 
         />
 
-        {/* ✅ Role Selection Dropdown */}
+        {/* Role Selection Dropdown */}
         <select value={role} onChange={(e) => setRole(e.target.value)} required>
           <option value="user">User</option>
           <option value="admin">Admin</option>

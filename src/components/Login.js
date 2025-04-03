@@ -13,11 +13,18 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/login`, { email, password });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/api/auth/login`, 
+        { email, password }, 
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      console.log("Login Success:", response.data); // ✅ Debugging log
+
       login(response.data);  
       navigate('/properties');
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error:', error.response ? error.response.data : error.message);
     }
   };
 
