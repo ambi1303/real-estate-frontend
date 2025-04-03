@@ -14,7 +14,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/auth/signup', { name, email, password, role });
+      await axios.post('process.env.REACT_APP_API_BASE_URL/api/auth/signup', { name, email, password, role });
       setMessage('Signup successful! Redirecting to login...'); // ✅ Show success message
       setTimeout(() => navigate('/login'), 2000); // ✅ Redirect after 2 seconds
     } catch (error) {
