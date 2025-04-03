@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";  // ✅ Import useNavigate
+import { useNavigate } from "react-router-dom";
 import propertyService from "../services/propertyService";
 import { AuthContext } from "../context/AuthContext";
-import '../components/property.css';
+import "../components/property.css";
+
 const PropertyList = () => {
   const [properties, setProperties] = useState([]);
   const [newProperty, setNewProperty] = useState({ name: "", location: "", price: "" });
   const [editingProperty, setEditingProperty] = useState(null);
   const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate(); // ✅ Initialize useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProperties();
@@ -24,11 +25,6 @@ const PropertyList = () => {
     }
   };
 
-  const handleLogout = () => {
-    logout(); // ✅ Call logout function
-    navigate("/login"); // ✅ Redirect to login page after logout
-  };
-
   const handleCreate = async () => {
     if (!user?.token || user?.role !== "admin") {
       alert("Unauthorized: Only admins can add properties.");
@@ -40,23 +36,13 @@ const PropertyList = () => {
       return;
     }
 
-    const priceValue = parseFloat(newProperty.price);
-    if (isNaN(priceValue) || priceValue <= 0) {
-      alert("Price must be a valid number greater than 0.");
-      return;
-    }
-
     try {
-      const createdProperty = await propertyService.create({
-        ...newProperty,
-        price: priceValue,
-      });
-
+      const createdProperty = await propertyService.create(newProperty);
       setProperties((prev) => [...prev, createdProperty]);
       setNewProperty({ name: "", location: "", price: "" });
     } catch (error) {
       console.error("Error adding property:", error);
-      alert(error.response?.data?.error || "Failed to add property.");
+      alert("Failed to add property.");
     }
   };
 
@@ -98,21 +84,11 @@ const PropertyList = () => {
   };
 
   return (
-    <div>
-      <h2>Property Listings</h2>
+    <div className="property-list-container">
+      <h2>Your Properties</h2>
 
-      {/* ✅ Logout Button with Redirect */}
-      {user && (
-        <div>
-          <p>Logged in as: {user.username} ({user.role})</p>
-          <button onClick={handleLogout}>Logout</button> {/* ✅ Calls handleLogout */}
-        </div>
-      )}
-
-      {/* ✅ Add New Property (Admin Only) */}
       {user?.role === "admin" && (
-        <div>
-          <h3>Add Property</h3>
+        <div className="add-property-form">
           <input
             type="text"
             placeholder="Property Name"
@@ -131,57 +107,61 @@ const PropertyList = () => {
             value={newProperty.price}
             onChange={(e) => setNewProperty({ ...newProperty, price: e.target.value })}
           />
-          <button onClick={handleCreate}>Add</button>
+          <button onClick={handleCreate} className="add-button">Add a new property</button>
         </div>
       )}
 
-      {/* ✅ Property List */}
       {properties.length === 0 ? (
         <p>No properties available.</p>
       ) : (
-        properties.map((property) => (
-          <div key={property._id}>
-            {editingProperty && editingProperty._id === property._id ? (
-              <div>
-                <input
-                  type="text"
-                  value={editingProperty.name}
-                  onChange={(e) =>
-                    setEditingProperty({ ...editingProperty, name: e.target.value })
-                  }
-                />
-                <input
-                  type="text"
-                  value={editingProperty.location}
-                  onChange={(e) =>
-                    setEditingProperty({ ...editingProperty, location: e.target.value })
-                  }
-                />
-                <input
-                  type="number"
-                  value={editingProperty.price}
-                  onChange={(e) =>
-                    setEditingProperty({ ...editingProperty, price: e.target.value })
-                  }
-                />
-                <button onClick={handleUpdate}>Save</button>
-                <button onClick={() => setEditingProperty(null)}>Cancel</button>
-              </div>
-            ) : (
-              <div>
-                <h3>{property.name}</h3>
-                <p>{property.location}</p>
-                <p>Price: ${property.price}</p>
-                {user?.role === "admin" && (
-                  <>
-                    <button onClick={() => handleDelete(property._id)}>Delete</button>
-                    <button onClick={() => handleEdit(property)}>Edit</button>
-                  </>
+        <div className="property-list">
+          {properties.map((property) => (
+            <div key={property._id} className="property-card">
+              <img src={property.image || "default-image.jpg"} alt={property.name} className="property-image"/>
+              <div className="property-details">
+                {editingProperty && editingProperty._id === property._id ? (
+                  <div className="edit-form">
+                    <input
+                      type="text"
+                      value={editingProperty.name}
+                      onChange={(e) =>
+                        setEditingProperty({ ...editingProperty, name: e.target.value })
+                      }
+                    />
+                    <input
+                      type="text"
+                      value={editingProperty.location}
+                      onChange={(e) =>
+                        setEditingProperty({ ...editingProperty, location: e.target.value })
+                      }
+                    />
+                    <input
+                      type="number"
+                      value={editingProperty.price}
+                      onChange={(e) =>
+                        setEditingProperty({ ...editingProperty, price: e.target.value })
+                      }
+                    />
+                    <button onClick={handleUpdate} className="save-button">Save</button>
+                    <button onClick={() => setEditingProperty(null)} className="cancel-button">Cancel</button>
+                  </div>
+                ) : (
+                  <div>
+                    <h3>{property.name}</h3>
+                    <p>{property.location}</p>
+                    <p>Price: ${property.price}</p>
+                    {user?.role === "admin" && (
+                      <div className="action-buttons">
+                        <button onClick={() => handleEdit(property)} className="edit-button">Edit</button>
+                        <button onClick={() => handleDelete(property._id)} className="delete-button">Delete</button>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
-            )}
-          </div>
-        ))
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

@@ -1,69 +1,63 @@
-/* ✅ Style for the Property Listings Page */
-.property-listings {
-    max-width: 900px;
+.property-list-container {
+    width: 60%;
     margin: auto;
-    padding: 20px;
-    text-align: center;
-}
-
-/* ✅ Style for Individual Property Cards */
-.property-card {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease-in-out;
-    margin-bottom: 15px;
-}
-
-.property-card:hover {
-    transform: scale(1.05);
-}
-
-/* ✅ Styling for the Add/Edit Form */
-.property-form {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-}
-
-.property-form input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  .property-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .property-card {
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 10px;
     border-radius: 5px;
-}
-
-/* ✅ Styling for Buttons */
-.property-btn {
+  }
+  
+  .property-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+    margin-right: 15px;
+  }
+  
+  .property-details {
+    flex-grow: 1;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .edit-button, .delete-button, .add-button {
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .edit-button {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .add-button {
     background-color: #007bff;
     color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 5px;
-}
-
-.property-btn:hover {
-    background-color: #0056b3;
-}
-
-.property-btn.delete {
-    background-color: #dc3545;
-}
-
-.property-btn.delete:hover {
-    background-color: #b02a37;
-}
-
-/* ✅ Logout Section */
-.logout-section {
-    margin-bottom: 20px;
-    background: #e9ecef;
-    padding: 10px;
-    border-radius: 5px;
-}
+    margin-top: 10px;
+  }
+  
+  .edit-form input {
+    margin: 5px;
+    padding: 5px;
+  }
+  
