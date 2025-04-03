@@ -30,27 +30,46 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input 
-          type="email" 
-          placeholder="Email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
-        />
-        <input 
-          type="password" 
-          placeholder="Password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="auth-container">
+      <h2 className="auth-title">USER LOGIN</h2>
+      <form onSubmit={handleLogin} className="auth-form">
+        <div className="input-group">
+          <span className="icon">👤</span>
+          <input 
+            type="email" 
+            placeholder="Email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+            className="auth-input"
+          />
+        </div>
+        
+        <div className="input-group">
+          <span className="icon">🔒</span>
+          <input 
+            type="password" 
+            placeholder="Password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+            className="auth-input"
+          />
+        </div>
 
-      <p>Don't have an account? <Link to="/signup">Sign up here</Link></p>
+        <div className="options">
+          <label className="remember-me">
+            <input type="checkbox" /> Remember
+          </label>
+          <Link to="/forgot-password" className="forgot-link">Forgot password?</Link>
+        </div>
+
+        <button type="submit" className="auth-button">LOGIN</button>
+
+        <p className="auth-switch">
+          Don't have an account? <Link to="/signup" className="switch-link">Sign up</Link>
+        </p>
+      </form>
     </div>
   );
 };

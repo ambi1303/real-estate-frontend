@@ -35,42 +35,58 @@ const Signup = () => {
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSignup}>
-        <input 
-          type="text" 
-          placeholder="Name" 
-          value={name} 
-          onChange={(e) => setName(e.target.value)} 
-          required 
-        />
-        <input 
-          type="email" 
-          placeholder="Email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          required 
-        />
-        <input 
-          type="password" 
-          placeholder="Password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          required 
-        />
+    <div className="auth-container">
+      <h2 className="auth-title">USER SIGNUP</h2>
+      {message && <p className="auth-message">{message}</p>}
+      
+      <form onSubmit={handleSignup} className="auth-form">
+        <div className="input-group">
+          <span className="icon">👤</span>
+          <input 
+            type="text" 
+            placeholder="Name" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)} 
+            required 
+            className="auth-input"
+          />
+        </div>
 
-        {/* Role Selection Dropdown */}
-        <select value={role} onChange={(e) => setRole(e.target.value)} required>
+        <div className="input-group">
+          <span className="icon">📧</span>
+          <input 
+            type="email" 
+            placeholder="Email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+            className="auth-input"
+          />
+        </div>
+
+        <div className="input-group">
+          <span className="icon">🔒</span>
+          <input 
+            type="password" 
+            placeholder="Password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+            className="auth-input"
+          />
+        </div>
+
+        <select value={role} onChange={(e) => setRole(e.target.value)} required className="auth-dropdown">
           <option value="user">User</option>
           <option value="admin">Admin</option>
         </select>
 
-        <button type="submit">Signup</button>
-      </form>
+        <button type="submit" className="auth-button">SIGNUP</button>
 
-      <p>Already have an account? <Link to="/login">Login here</Link></p>
+        <p className="auth-switch">
+          Already have an account? <Link to="/login" className="switch-link">Login</Link>
+        </p>
+      </form>
     </div>
   );
 };
