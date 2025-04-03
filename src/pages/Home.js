@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import API from "../api/api";
-import PropertyCard from "../components/PropertyCard";
+import { Link } from "react-router-dom";
+import api from "../services/api"; // Ensure correct path
+import PropertyCard from "../components/PropertyCard"; // Ensure correct path
 
 const Home = () => {
   const [properties, setProperties] = useState([]);
 
   useEffect(() => {
-    API.get("/properties")
+    api.get("/api/properties")
       .then((res) => setProperties(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -19,6 +20,11 @@ const Home = () => {
           <PropertyCard key={property._id} property={property} />
         ))}
       </div>
+
+      {/* Correct link to properties */}
+      <Link to="/properties">
+        <button>View All Properties</button>
+      </Link>
     </div>
   );
 };
