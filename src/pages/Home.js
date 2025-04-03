@@ -1,30 +1,24 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import api from "../services/api"; // Ensure correct path
-import PropertyCard from "../components/PropertyCard"; // Ensure correct path
+import React, { useEffect, useState } from 'react';  // ✅ Add useState
+import propertyService from '../services/propertyService';
 
 const Home = () => {
-  const [properties, setProperties] = useState([]);
+  const [properties, setProperties] = useState([]); // ✅ Define state
 
   useEffect(() => {
-    api.get("/api/properties")
-      .then((res) => setProperties(res.data))
-      .catch((err) => console.error(err));
+    propertyService.getAll()
+      .then(response => setProperties(response.data))
+      .catch(error => console.error('Error fetching properties:', error));
   }, []);
 
   return (
     <div>
       <h1>Property Listings</h1>
-      <div>
-        {properties.map((property) => (
-          <PropertyCard key={property._id} property={property} />
-        ))}
-      </div>
-
-      {/* Correct link to properties */}
-      <Link to="/properties">
-        <button>View All Properties</button>
-      </Link>
+      {properties.map(property => (
+        <div key={property._id}>
+          <h2>{property.name}</h2>
+          <p>{property.location}</p>
+        </div>
+      ))}
     </div>
   );
 };

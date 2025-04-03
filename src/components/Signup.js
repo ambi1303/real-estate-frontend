@@ -1,36 +1,33 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import { useState, useContext } from 'react';
+import axios from 'axios';
+import {AuthContext} from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null); // Add error state
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setError(null);
     try {
-      await api.post("/api/auth/signup", { name, email, password });
-      navigate("/login"); // Redirect to login after signup
+      const response = await axios.post('http://localhost:5000/api/auth/signup', { name, email, password });
+      login(response.data);
+      navigate('/properties');
     } catch (error) {
-      setError(error.response?.data?.message || "Signup failed"); // Show meaningful error
+      console.error('Signup error:', error);
     }
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>} {/* Show error */}
-      <form onSubmit={handleSignup}>
-        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit">Signup</button>
-      </form>
-    </div>
+    <form onSubmit={handleSignup}>
+      <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      <button type="submit">Signup</button>
+    </form>
   );
 };
 
